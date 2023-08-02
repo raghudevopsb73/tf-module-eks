@@ -21,3 +21,9 @@ resource "aws_eks_node_group" "nodes" {
     min_size     = var.min_size
   }
 }
+
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["9e99a48a9960b14926bb7f3b02e22da2b0ab7280"]
+  url             = aws_eks_cluster.eks.identity.0.oidc.0.issuer
+}
