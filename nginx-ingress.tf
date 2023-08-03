@@ -247,27 +247,30 @@ resource "aws_iam_policy" "policy" {
 }
 
 data "aws_caller_identity" "current" {}
+locals {
+  issuer = element(split("/", aws_eks_cluster.eks.identity.0.oidc.0.issuer), 4)
+}
 
-//resource "aws_iam_role" "role" {
-//  name = "${var.env}-eks-alb-role"
-//
-//  assume_role_policy = jsonencode({
-//    "Version": "2012-10-17",
-//    "Statement": [
-//      {
-//        "Effect": "Allow",
-//        "Principal": {
-//          "Federated": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE"
-//        },
-//        "Action": "sts:AssumeRoleWithWebIdentity",
-//        "Condition": {
-//          "StringEquals": {
-//            "oidc.eks.region-code.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE:aud": "sts.amazonaws.com",
-//            "oidc.eks.region-code.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE:sub": "system:serviceaccount:kube-system:aws-load-balancer-controller"
-//          }
-//        }
-//      }
-//    ]
-//  })
-//}
+resource "aws_iam_role" "role" {
+  name = "${var.env}-eks-alb-role"
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Federated" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/${local.issuer}"
+        },
+        "Action" : "sts:AssumeRoleWithWebIdentity",
+        "Condition" : {
+          "StringEquals" : {
+            "oidc.eks.us-east-1.amazonaws.com/id/${local.issuer}:aud" : "sts.amazonaws.com",
+            "oidc.eks.us-east-1.amazonaws.com/id/${local.issuer}:sub" : "system:serviceaccount:kube-system:aws-load-balancer-controller"
+          }
+        }
+      }
+    ]
+  })
+}
 

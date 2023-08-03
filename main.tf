@@ -28,11 +28,3 @@ resource "aws_iam_openid_connect_provider" "cluster" {
   url             = aws_eks_cluster.eks.identity.0.oidc.0.issuer
 }
 
-resource "null_resource" "test" {
-  triggers = {
-    abc = timestamp()
-  }
-  provisioner "local-exec" {
-    command = "echo ${element(split("/", aws_eks_cluster.eks.identity.0.oidc.0.issuer), 4)}"
-  }
-}
