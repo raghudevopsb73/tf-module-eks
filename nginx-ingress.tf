@@ -279,3 +279,8 @@ resource "aws_iam_role_policy_attachment" "alb-role-attach" {
   role       = aws_iam_role.alb.name
 }
 
+resource "null_resource" "null" {
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --name ${var.env}-eks ; kubectl apply -f ${templatefile("${path.module}/sa.yml", { role_arn = aws_iam_role.alb.arn })}"
+  }
+}
