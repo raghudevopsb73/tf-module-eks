@@ -285,6 +285,11 @@ resource "local_file" "sa" {
 }
 
 resource "null_resource" "null" {
+
+  triggers = {
+    always = timestamp()
+  }
+
   depends_on = [
     local_file.sa,
     aws_eks_cluster.eks
