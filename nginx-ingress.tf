@@ -1,4 +1,4 @@
-resource "aws_iam_policy" "policy" {
+resource "aws_iam_policy" "alb" {
   name        = "${var.env}-eks-alb-policy"
   path        = "/"
   description = "${var.env}-eks-policy"
@@ -251,7 +251,7 @@ locals {
   issuer = element(split("/", aws_eks_cluster.eks.identity.0.oidc.0.issuer), 4)
 }
 
-resource "aws_iam_role" "role" {
+resource "aws_iam_role" "alb" {
   name = "${var.env}-eks-alb-role"
 
   assume_role_policy = jsonencode({
@@ -272,5 +272,10 @@ resource "aws_iam_role" "role" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "alb-role-attach" {
+  policy_arn = aws_iam_policy.alb.arn
+  role       = aws_iam_role.alb.name
 }
 
