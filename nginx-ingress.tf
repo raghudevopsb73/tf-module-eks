@@ -285,6 +285,10 @@ resource "local_file" "sa" {
 }
 
 resource "null_resource" "null" {
+  depends_on = [
+    local_file.sa,
+    aws_eks_cluster.eks
+  ]
   provisioner "local-exec" {
     command = "aws eks update-kubeconfig --name ${var.env}-eks ; kubectl apply -f ${path.module}/sa-final.yml"
   }
