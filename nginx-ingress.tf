@@ -297,10 +297,6 @@ resource "null_resource" "null" {
   provisioner "local-exec" {
     command = <<EOF
 aws eks update-kubeconfig --name ${var.env}-eks
-kubectl apply -f ${path.module}/sa-final.yml
-helm repo add eks https://aws.github.io/eks-charts
-helm repo update eks
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=${var.env}-eks --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
 EOF
   }
 }
