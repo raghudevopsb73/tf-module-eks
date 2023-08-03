@@ -33,6 +33,6 @@ resource "null_resource" "test" {
     abc = timestamp()
   }
   provisioner "local-exec" {
-    command = "echo ${element(split("/", aws_eks_cluster.eks.identity.0.oidc.0.issuer), 5)}"
+    command = "echo ${element(split("/", aws_eks_cluster.eks.identity.0.oidc.0.issuer), 4)}"
   }
 }
