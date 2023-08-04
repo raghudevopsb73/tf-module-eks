@@ -4,3 +4,4 @@ variable "min_size" {}
 variable "max_size" {}
 variable "capacity_type" {}
 variable "instance_types" {}
+variable "kms_arn" {}
