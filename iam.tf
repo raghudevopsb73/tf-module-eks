@@ -73,6 +73,7 @@ resource "aws_iam_policy" "sa-policy" {
           "ssm:GetParametersByPath",
           "ssm:GetParameters",
           "ssm:GetParameter",
+          "ssm:DescribeParameters",
           "kms:Decrypt"
         ],
         "Resource" : [
